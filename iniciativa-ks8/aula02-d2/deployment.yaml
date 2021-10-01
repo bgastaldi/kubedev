@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: bgastaldi/conversao-peso:latest
+          resources:
+            requests:
+              cpu: "0.05"
+              memory: "20Mi"
+            limits:
+              cpu: "0.05"
+              memory: "25Mi"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 8080
+      targetPort: 80
+      nodePort: 30000
+  type: NodePort
